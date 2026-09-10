@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # RotoPass *(working name — rename freely)*
 
 A browser extension for deterministic, per-site passwords that **evolve over time** instead of staying fixed forever — like an Enigma machine: the same keystroke produces a different output once the rotors have stepped.
@@ -70,3 +71,7 @@ rotopass/
 ## Status
 
 Early architecture / proof-of-concept stage. Login-success detection is the first thing to prototype in isolation, before wiring up the full extension — see open problems above.
+=======
+# Passrotor
+A browser extension for deterministic, per-site passwords that evolve over time instead of staying fixed forever, like an Enigma machine: the same keystroke produces a different output once the rotors have stepped.
+>>>>>>> 68cc1518df137809e9f3046d6772d71f3d495ccc
