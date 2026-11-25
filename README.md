@@ -8,11 +8,28 @@ Type the exact same master password everywhere. The extension derives a differen
 
 ## Try the prototype
 
-The repository root is an unpacked Manifest V3 extension (Chrome / Edge).
+The repository root is an unpacked Manifest V3 extension (any Chromium browser: Brave, Chrome, Edge).
 
-1. Open `chrome://extensions` (or `edge://extensions`), turn on **Developer mode**.
+1. Open `brave://extensions` (or `chrome://extensions` / `edge://extensions`), turn on **Developer mode**.
 2. Click **Load unpacked** and pick the cloned `Passrotor` folder.
-3. Pin Passrotor, open any website, click the icon.
+3. Pin Passrotor, open a website, click the icon.
+
+### Test site (no real accounts needed)
+
+`test-site/server.js` is a fake website (Node only, no dependencies) with register, login and change-password pages. Its account page shows the password the site currently stores, so you can see exactly what Passrotor did.
+
+```
+npm run test-site
+```
+
+Then open **http://localhost:8080** (use `localhost`, not `127.0.0.1`: Passrotor sees those as two different sites). A full round trip:
+
+1. **Register:** type a username, open Passrotor, enter a master password, **Fill login** (fills both password fields), submit.
+2. **Log in:** same thing on the login page. The account page shows the stored password; compare it with Passrotor's **Show**.
+3. **Rotate:** go to *Change password*, click **Rotate this site's password…** → **Fill change form**, submit, reopen Passrotor, **It worked**.
+4. Log out and log in again: **Fill login** now uses the rotated password.
+
+There are two change-password forms: a well-labelled one (`autocomplete="new-password"` etc.) and `?variant=plain` with meaningless field names, which tests the popup's "current, new, confirm" fallback. Accounts live in memory, so restarting the server (or `/reset`) wipes them, which is a quick way to try out drift recovery.
 
 In the popup:
 
@@ -76,7 +93,8 @@ Passrotor/
 ├── rotation-store.js        # {domain: counter} pairs only — no secrets stored
 ├── kdf.test.js              # node kdf.test.js
 ├── rotation-store.test.js   # node rotation-store.test.js
-└── package.json             # npm test
+├── test-site/server.js      # fake website to try the extension on (npm run test-site)
+└── package.json             # npm test, npm run test-site
 ```
 
 **Explicitly never stored:** the master password itself (held in the popup only while it's open), and any derived password. Only `{domain, counter}` pairs (plus in-progress rotation targets) are persisted or synced.
