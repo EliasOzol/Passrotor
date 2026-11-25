@@ -8,6 +8,8 @@ Type the exact same master password everywhere. The extension derives a differen
 
 ## Try the prototype
 
+**Without installing anything:** open [`docs/index.html`](docs/index.html) through any local web server (or GitHub Pages from `docs/`). It runs the real `kdf.js` and `rotation-store.js` against a simulated website, so you can sign up, log in, rotate and see the old password stop working.
+
 The repository root is an unpacked Manifest V3 extension (any Chromium browser: Brave, Chrome, Edge).
 
 1. Open `brave://extensions` (or `chrome://extensions` / `edge://extensions`), turn on **Developer mode**.
@@ -93,6 +95,7 @@ Passrotor/
 ├── rotation-store.js        # {domain: counter} pairs only — no secrets stored
 ├── kdf.test.js              # node kdf.test.js
 ├── rotation-store.test.js   # node rotation-store.test.js
+├── docs/index.html          # in-browser playground (no extension needed)
 ├── test-site/server.js      # fake website to try the extension on (npm run test-site)
 ├── test-site/smoke.test.js  # register → login → rotate twice over HTTP, part of npm test
 └── package.json             # npm test, npm run test-site

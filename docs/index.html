@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Passrotor playground</title>
+  <style>
+    :root {
+      --bg: #f6f5f2;
+      --surface: #ffffff;
+      --sunk: #efeee9;
+      --ink: #1c1b19;
+      --ink-2: #5d5a53;
+      --ink-3: #8d8980;
+      --accent: #2c5fd6;
+      --accent-ink: #ffffff;
+      --good: #1f7a3d;
+      --bad: #b3261e;
+      --warn-bg: #fbf1dc;
+      --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #161614;
+        --surface: #201f1d;
+        --sunk: #2a2926;
+        --ink: #ecebe7;
+        --ink-2: #b2afa7;
+        --ink-3: #7f7c75;
+        --accent: #7ea2ff;
+        --accent-ink: #111318;
+        --good: #6fcf8f;
+        --bad: #ff8a80;
+        --warn-bg: #3a3122;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      padding: 32px 24px 48px;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/20px system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; }
+
+    header { margin-bottom: 24px; }
+    h1 { margin: 0 0 8px; font-size: 24px; line-height: 32px; font-weight: 650; letter-spacing: -0.01em; }
+    header p { margin: 0; max-width: 60ch; color: var(--ink-2); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    section { background: var(--surface); border-radius: 12px; padding: 24px; }
+    h2 { margin: 0 0 4px; font-size: 16px; line-height: 24px; font-weight: 600; }
+    .sub { margin: 0 0 16px; color: var(--ink-3); font-size: 12px; line-height: 16px; }
+
+    label { display: block; margin-bottom: 16px; font-weight: 550; }
+    input {
+      display: block; width: 100%; height: 40px; margin-top: 8px; padding: 0 12px;
+      font: inherit; color: var(--ink); background: var(--sunk);
+      border: 1px solid transparent; border-radius: 8px;
+      transition: border-color 120ms, background-color 120ms;
+    }
+    input:hover { border-color: var(--ink-3); }
+    input:focus-visible { outline: none; border-color: var(--accent); background: var(--surface); }
+
+    .rotor { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .rotor .label { flex: 1; font-weight: 550; }
+    .rotor output { min-width: 56px; text-align: right; font: 600 24px/32px var(--mono); font-variant-numeric: tabular-nums; }
+    .rotor .next { color: var(--accent); }
+
+    .pw { margin-bottom: 8px; }
+    .pw .k { display: block; margin-bottom: 8px; color: var(--ink-2); font-size: 12px; line-height: 16px; }
+    .pw .row { display: flex; gap: 8px; align-items: center; }
+    .pw code {
+      flex: 1; min-width: 0; height: 40px; padding: 0 12px; display: flex; align-items: center;
+      background: var(--sunk); border-radius: 8px; font: 13px/16px var(--mono);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .pw code.empty { color: var(--ink-3); font-family: inherit; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    button {
+      height: 40px; padding: 0 16px; font: inherit; font-weight: 550; color: var(--ink);
+      background: var(--sunk); border: 1px solid transparent; border-radius: 8px; cursor: pointer;
+      transition: background-color 120ms, border-color 120ms, transform 120ms, opacity 120ms;
+    }
+    button:hover:not(:disabled) { border-color: var(--ink-3); }
+    button:active:not(:disabled) { transform: translateY(1px); }
+    button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    button.primary { background: var(--accent); color: var(--accent-ink); }
+    button.primary:hover:not(:disabled) { border-color: transparent; filter: brightness(1.08); }
+    button.square { width: 40px; padding: 0; font-size: 18px; }
+    button.quiet { height: 40px; padding: 0 12px; background: transparent; color: var(--ink-2); }
+
+    .steps { margin-top: 16px; padding: 16px; border-radius: 8px; background: var(--warn-bg); }
+    .steps p { margin: 0 0 8px; font-weight: 600; }
+    .steps ol { margin: 0; padding-left: 20px; color: var(--ink-2); }
+    .steps .actions { margin-top: 16px; }
+
+    .result { min-height: 20px; margin: 16px 0 0; }
+    .result.good { color: var(--good); }
+    .result.bad { color: var(--bad); }
+
+    .log { margin: 24px 0 0; padding: 0; list-style: none; color: var(--ink-2); font-size: 12px; line-height: 16px; }
+    .log li { display: flex; gap: 8px; padding: 4px 0; }
+    .log time { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+    .log-title { margin: 24px 0 0; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--ink-2); }
+    .log-title + .log { margin-top: 8px; }
+
+    footer { margin-top: 24px; color: var(--ink-3); font-size: 12px; line-height: 16px; }
+    footer code { font-family: var(--mono); }
+
+    @media (max-width: 720px) {
+      body { padding: 24px 16px 32px; }
+      .grid { grid-template-columns: 1fr; }
+      section { padding: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Passrotor playground</h1>
+      <p>Try the extension's flow right here: sign up, log in, then rotate the password and see the old one stop working. One panel is what Passrotor computes, the other plays the website.</p>
+    </header>
+
+    <div class="grid">
+      <section aria-labelledby="ext-title">
+        <h2 id="ext-title">Passrotor</h2>
+        <p class="sub">Stores only a counter per site. Never your password.</p>
+
+        <label>Master password
+          <input id="master" type="password" autocomplete="off" placeholder="Type anything">
+        </label>
+        <label>Site
+          <input id="site" value="example.com" spellcheck="false" autocomplete="off">
+        </label>
+
+        <div class="rotor">
+          <span class="label">Rotation</span>
+          <button id="down" class="square" title="Step back by one (fix drift)" aria-label="Step rotation back">−</button>
+          <button id="up" class="square" title="Step forward by one (fix drift)" aria-label="Step rotation forward">+</button>
+          <output id="counter" aria-live="polite">0</output>
+        </div>
+
+        <div class="pw">
+          <span class="k" id="current-label">Password for this site</span>
+          <div class="row">
+            <code id="current" class="empty">Enter a master password</code>
+            <button id="reveal" class="quiet" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <div class="pw" id="next-row" hidden>
+          <span class="k">Next password, after rotation</span>
+          <div class="row"><code id="next"></code></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="site-title">
+        <h2 id="site-title">example.com</h2>
+        <p class="sub" id="site-sub">No account yet.</p>
+
+        <div class="pw">
+          <span class="k">What the site has stored (a real site wouldn't show this)</span>
+          <div class="row"><code id="stored" class="empty">Nothing</code></div>
+        </div>
+
+        <div class="actions" id="account-actions">
+          <button id="signup" class="primary">Sign up</button>
+          <button id="login">Log in</button>
+          <button id="rotate">Rotate password</button>
+        </div>
+
+        <div class="steps" id="steps" hidden>
+          <p id="steps-title">Rotating</p>
+          <ol>
+            <li>Change the password on the site (current → next).</li>
+            <li>Only if that worked, advance Passrotor's counter.</li>
+          </ol>
+          <div class="actions">
+            <button id="change" class="primary">Change on site</button>
+            <button id="confirm">It worked</button>
+            <button id="cancel" class="quiet">Cancel</button>
+          </div>
+        </div>
+
+        <p class="result" id="result" role="status"></p>
+
+        <p class="log-title" id="log-title" hidden>Site activity</p>
+        <ul class="log" id="log"></ul>
+      </section>
+    </div>
+
+    <footer>Runs the project's real <code>kdf.js</code> and <code>rotation-store.js</code> in this tab (PBKDF2, 250,000 iterations). Nothing is saved; reload to start over.</footer>
+  </div>
+
+  <script src="../kdf.js"></script>
+  <script src="../rotation-store.js"></script>
+  <script src="playground.js"></script>
+</body>
+</html>
