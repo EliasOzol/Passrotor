@@ -94,6 +94,7 @@ Passrotor/
 ├── kdf.test.js              # node kdf.test.js
 ├── rotation-store.test.js   # node rotation-store.test.js
 ├── test-site/server.js      # fake website to try the extension on (npm run test-site)
+├── test-site/smoke.test.js  # register → login → rotate twice over HTTP, part of npm test
 └── package.json             # npm test, npm run test-site
 ```
 

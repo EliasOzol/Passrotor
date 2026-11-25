@@ -4,7 +4,7 @@
   "private": true,
   "description": "Deterministic per-site passwords that rotate over time (browser extension prototype).",
   "scripts": {
-    "test": "node kdf.test.js && node rotation-store.test.js",
+    "test": "node kdf.test.js && node rotation-store.test.js && node test-site/smoke.test.js",
     "test-site": "node test-site/server.js"
   },
   "engines": {
