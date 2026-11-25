@@ -1,5 +1,5 @@
 /**
- * kdf.test.js — run with: node tests/kdf.test.js
+ * kdf.test.js — run with: node kdf.test.js (or: npm test)
  *
  * Requires Node 19+ (global `crypto.subtle` available without imports).
  * No test framework yet — plain assertions, fails loudly with a non-zero
@@ -7,7 +7,7 @@
  */
 
 const assert = require("assert");
-const { derivePassword, normalizeDomain } = require("../extension/background/kdf.js");
+const { derivePassword, normalizeDomain } = require("./kdf.js");
 
 async function run() {
   console.log("Running kdf.js tests...\n");

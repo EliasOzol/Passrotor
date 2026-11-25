@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Passrotor</title>
+  <style>
+    [hidden] { display: none !important; }
+    body { width: 320px; margin: 0; padding: 12px 14px; font: 13px/1.4 system-ui, sans-serif; color: #1d1d1f; }
+    h1 { font-size: 16px; margin: 0 0 10px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input { box-sizing: border-box; width: 100%; margin-top: 3px; padding: 6px 8px; font: inherit; border: 1px solid #c7c7cc; border-radius: 6px; }
+    .row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+    .row button { flex: 1; }
+    .counter { font-weight: 600; }
+    .counter strong { min-width: 1.5em; text-align: center; }
+    .counter button { flex: 0 0 auto; width: 26px; padding: 2px 0; }
+    .counter .hint { font-weight: normal; color: #6e6e73; font-size: 11px; }
+    button { padding: 6px 8px; font: inherit; border: 1px solid #c7c7cc; border-radius: 6px; background: #f5f5f7; cursor: pointer; }
+    button:disabled { opacity: 0.45; cursor: default; }
+    button.primary { background: #2f6fde; border-color: #2f6fde; color: #fff; }
+    button.link { border: none; background: none; color: #2f6fde; padding: 0; text-decoration: underline; }
+    #rotate-panel { border: 1px solid #f0c36d; background: #fff8e6; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+    #rotate-panel p { margin: 0 0 4px; font-weight: 600; }
+    #rotate-panel ol { margin: 0 0 8px; padding-left: 18px; }
+    #output { font-family: ui-monospace, Consolas, monospace; margin-bottom: 8px; }
+    #status { min-height: 1.4em; margin: 0; color: #3a3a3c; }
+    #status.error { color: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Passrotor</h1>
+
+  <label>Site
+    <input id="domain" placeholder="example.com" spellcheck="false" autocomplete="off">
+  </label>
+
+  <div class="row counter">
+    Rotation <strong id="counter">–</strong>
+    <button id="counter-down" title="Step the counter back by one (drift fix)">−</button>
+    <button id="counter-up" title="Step the counter forward by one (drift fix)">+</button>
+    <span class="hint">only to fix drift</span>
+  </div>
+
+  <label>Master password
+    <input id="master" type="password" autocomplete="off">
+  </label>
+
+  <section id="normal-actions">
+    <div class="row">
+      <button id="fill" class="primary">Fill login</button>
+      <button id="copy">Copy</button>
+      <button id="show">Show</button>
+    </div>
+    <div class="row">
+      <button id="start-rotation" class="link">Rotate this site's password…</button>
+    </div>
+  </section>
+
+  <section id="rotate-panel" hidden>
+    <p id="rotate-info"></p>
+    <ol>
+      <li>Open the site's change-password page.</li>
+      <li>Click <em>Fill change form</em> and submit the form on the page.</li>
+      <li>Reopen Passrotor and click <em>It worked</em>.</li>
+    </ol>
+    <div class="row">
+      <button id="fill-change" class="primary">Fill change form</button>
+    </div>
+    <div class="row">
+      <button id="copy-current">Copy current</button>
+      <button id="copy-new">Copy new</button>
+    </div>
+    <div class="row">
+      <button id="confirm-rotation">It worked</button>
+      <button id="cancel-rotation">Cancel</button>
+    </div>
+  </section>
+
+  <input id="output" readonly hidden>
+  <p id="status" role="status"></p>
+
+  <!-- Plain scripts, in order: kdf.js and rotation-store.js define globals used by popup.js. -->
+  <script src="kdf.js"></script>
+  <script src="rotation-store.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

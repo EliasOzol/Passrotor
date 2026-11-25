@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Passrotor",
+  "version": "0.1.0",
+  "description": "Deterministic per-site passwords that rotate over time. Only {domain: counter} pairs are stored.",
+  "action": {
+    "default_title": "Passrotor",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "scripting", "storage"]
+}

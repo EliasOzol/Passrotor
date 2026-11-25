@@ -107,4 +107,8 @@ async function derivePassword(masterPassword, domain, counter, options = {}) {
   return formatAsPassword(keyBytes, options.length ?? DEFAULT_PASSWORD_LENGTH);
 }
 
-module.exports = { derivePassword, normalizeDomain, deriveKeyMaterial, formatAsPassword };
+// In Node (tests) export as a CommonJS module. In the extension popup this
+// file is loaded as a plain <script>, so the functions above are globals.
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { derivePassword, normalizeDomain, deriveKeyMaterial, formatAsPassword };
+}

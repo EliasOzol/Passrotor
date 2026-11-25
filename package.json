@@ -1,0 +1,12 @@
+{
+  "name": "passrotor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic per-site passwords that rotate over time (browser extension prototype).",
+  "scripts": {
+    "test": "node kdf.test.js && node rotation-store.test.js"
+  },
+  "engines": {
+    "node": ">=19"
+  }
+}
